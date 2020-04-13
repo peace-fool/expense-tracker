@@ -9,31 +9,32 @@ class TransactionList extends StatelessWidget{
     
   @override
   Widget build(BuildContext context){
-    return   Container(
-      height: 620,
-      child: ListView.builder(
+    return  Card(
+      elevation: 5,
+     child: 
+     Container(
+      height: 485,
+      child: transaction.isEmpty ? Column(children: <Widget>[
+        Text('No transaction is added yet!' , style: Theme.of(context).textTheme.title,),
+        SizedBox(height: 20),
+        Container(height: 200,
+          child: Image.asset('lib/Images/waiting.png' , fit: BoxFit.cover,))
+      ],)
+       :ListView.builder(
         itemBuilder: (ctx , index){
-            return Card(
-              child:
-                Row(
-                  children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration( color: Theme.of(context).primaryColor) ,
-                          child: Text(
-                          'Rs${transaction[index].amount}'
-                        , style: TextStyle(fontSize: 15 , color: Colors.white),), margin: EdgeInsets.symmetric(horizontal: 10) ,padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),),
-                        Column( crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                          Text(transaction[index].title , style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),),
-                          Text(DateFormat.yMMMd().format(transaction[index].date) , style: TextStyle(fontSize: 15 , color: Colors.grey ),)
-                        ],
-                        )
-                  ],
-                )
-              );
+          return ListTile(
+            leading: Container(child: FittedBox(child: CircleAvatar(radius: 30 , child: Text('Rs${transaction[index].amount}'),), ), margin: EdgeInsets.all(6),),
+            title: Text(transaction[index].title ,style: Theme.of(context).textTheme.title,),
+            subtitle: Text(DateFormat.yMMMd().format(transaction[index].date)),
+          );
         },
         itemCount: transaction.length,
       ),
-    );
+    ),);
   }
 }
+
+
+
+
+
