@@ -1,40 +1,73 @@
 import 'package:flutter/material.dart';
-import '../models/transactions.dart';
 import 'package:intl/intl.dart';
+import '../models/transactions.dart';
 
-class TransactionList extends StatelessWidget{
+class TransactionList extends StatelessWidget {
+  final List<Transaction> transactions;
+  final Function deleteTx;
 
-  final List<Transaction> transaction;
-  TransactionList(this.transaction);
-    
+  TransactionList(this.transactions, this.deleteTx);
+
   @override
-  Widget build(BuildContext context){
-    return  Card(
-      elevation: 5,
-     child: 
-     Container(
-      height: 485,
-      child: transaction.isEmpty ? Column(children: <Widget>[
-        Text('No transaction is added yet!' , style: Theme.of(context).textTheme.title,),
-        SizedBox(height: 20),
-        Container(height: 200,
-          child: Image.asset('lib/Images/waiting.png' , fit: BoxFit.cover,))
-      ],)
-       :ListView.builder(
-        itemBuilder: (ctx , index){
-          return ListTile(
-            leading: Container(child: FittedBox(child: CircleAvatar(radius: 30 , child: Text('Rs${transaction[index].amount}'),), ), margin: EdgeInsets.all(6),),
-            title: Text(transaction[index].title ,style: Theme.of(context).textTheme.title,),
-            subtitle: Text(DateFormat.yMMMd().format(transaction[index].date)),
-          );
-        },
-        itemCount: transaction.length,
-      ),
-    ),);
+  Widget build(BuildContext context) {
+    return 
+    Container(
+      child: transactions.isEmpty
+          ? LayoutBuilder(builder: (ctx , constraints){
+            return Column(
+              children: <Widget>[
+                Text(
+                  'No transactions added yet!',
+                  style: Theme.of(context).textTheme.title,
+                ),
+                SizedBox(
+                  height: constraints.maxHeight * 0.1,
+                ),
+                Container(
+                    height: constraints.maxHeight * 0.6,
+                    child: Image.asset(
+                      'lib/Images/waiting.png',
+                      fit: BoxFit.cover,
+                    )),
+              ],
+            );
+          })
+          
+          : ListView.builder(
+              itemBuilder: (ctx, index) {
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 5,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: FittedBox(
+                          child: Text('\Rs${transactions[index].amount}'),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      transactions[index].title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[index].date),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                      onPressed: () => deleteTx(transactions[index].id),
+                    ),
+                  ),
+                );
+              },
+              itemCount: transactions.length,
+            ),
+    );
   }
 }
-
-
-
-
-
