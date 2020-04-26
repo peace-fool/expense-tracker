@@ -27,13 +27,13 @@ class MyApp extends StatelessWidget {
                 button: TextStyle(color: Colors.white),
               ),
           appBarTheme: AppBarTheme(
-            textTheme: ThemeData.light().textTheme.copyWith(
+          textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+                ),     
           )),
       home: MyHomePage(),
     );
@@ -66,8 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Transaction(id: 't1',title: 'New Shoes',amount: 69,date: DateTime.now(),),
     Transaction(id: 't2',title: 'Weekly Groceries',amount: 16,date: DateTime.now(),),
       Transaction(id: 't1',title: 'New Shoes',amount: 69,date: DateTime.now(),),
-    Transaction(id: 't2',title: 'Weekly Groceries',amount: 16,date: DateTime.now(),),
-    
+    Transaction(id: 't2',title: 'Weekly Groceries',amount: 16,date: DateTime.now(),)
   ];
 
   List<Transaction> get _recentTransactions {
@@ -113,6 +112,15 @@ class _MyHomePageState extends State<MyHomePage> {
   } 
   bool _showChart = true;
 
+  List<Widget> itsPort (MediaQueryData mediaQue , AppBar appBar , Widget  xList){
+    return[
+    Container(
+                    height: (mediaQue.size.height -
+                            appBar.preferredSize.height -
+                            mediaQue.padding.top) *
+                        0.3,
+                    child: Chart(_recentTransactions)), xList ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,13 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     })
               ],
             ),
-            if (!isLandscape) Container(
-                    height: (mediaQue.size.height -
-                            appBar.preferredSize.height -
-                            mediaQue.padding.top) *
-                        0.3,
-                    child: Chart(_recentTransactions)),
-            if (!isLandscape)  xList,
+            if (!isLandscape) ...itsPort(mediaQue, appBar , xList),
+          
 
             if (isLandscape) _showChart
                 ? Container(
